@@ -27,7 +27,7 @@ BuildRequires:	gtk2-devel
 BuildRequires:	devil-devel
 BuildRequires:	glew-devel
 BuildRequires:	tinyxml-devel
-BuildRequires:	lua-devel
+BuildRequires:	tolua++-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
