@@ -53,7 +53,7 @@ Group:		Development/C++
 Requires:	%{libname} = %{version}-%{release}
 Provides:	lib%{name}-devel = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
-Obsoletes:	%mklibname %{name} 0 -d
+Obsoletes:	%mklibname CEGUI 0 -d
 Conflicts:	%{_lib}CEGUI-devel >= 0.7
 
 %description -n  %{develname}
