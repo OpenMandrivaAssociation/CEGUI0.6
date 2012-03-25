@@ -4,8 +4,8 @@
 Summary:	A free library providing windowing and widgets for graphics APIs / engines 
 Name:		CEGUI0.6
 Version:	0.6.2
-Release:	%mkrel 6
-License:	MIT 
+Release:	%mkrel 7
+License:	MIT
 Group:		Development/C++
 URL:		http://www.cegui.org.uk
 Source0:	http://prdownloads.sourceforge.net/crayzedsgui/CEGUI-%{version}.tar.gz
@@ -14,10 +14,16 @@ Patch2:		CEGUI-0.6.2-fix-underlinking.patch
 Patch3:		CEGUI-0.6.2-release-as-so-ver.patch
 Patch4:		cegui-0.6.2-new-DevIL.patch
 Patch5:		CEGUI-0.6.2-install.patch
+Patch6:		CEGUI-0.6.2-gcc46.patch
+Patch7:		CEGUI-0.6.2-tinyxml.patch
 BuildRequires:	libxml2-devel
 BuildRequires:	mesagl-devel
 BuildRequires:	mesaglu-devel
+%if %{mdvver} >= 201200
+BuildRequires:	freeglut-devel
+%else
 BuildRequires:	mesaglut-devel
+%endif
 BuildRequires:	freetype2-devel
 BuildRequires:	pcre-devel
 BuildRequires:	freeimage-devel
@@ -28,7 +34,6 @@ BuildRequires:	devil-devel
 BuildRequires:	glew-devel
 BuildRequires:	tinyxml-devel
 BuildRequires:	tolua++-devel
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 Crazy Eddie's GUI System is a free library providing windowing and widgets for 
@@ -66,6 +71,8 @@ Development file for CEGUI.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p0
+%patch6 -p1
+%patch7 -p1
 
 touch NEWS
 
@@ -79,39 +86,31 @@ autoreconf -ifv
 	--enable-freeimage \
 	--disable-directfb-renderer
 
-
 # We do not want to get linked against a system copy of ourselves!
-sed -i 's|-L%{_libdir}||g' RendererModules/OpenGLGUIRenderer/Makefile
+%__sed -i 's|-L%{_libdir}||g' RendererModules/OpenGLGUIRenderer/Makefile
 # Don't use rpath!
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+%__sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+%__sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 %make
 
 %install
-rm -rf %{buildroot}
+%__rm -rf %{buildroot}
 %makeinstall_std
 
 %clean
-rm -rf %{buildroot}
-
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
+%__rm -rf %{buildroot}
 
 %files -n %{libname}
-%defattr(-,root,root)
 %{_libdir}/libCEGUI*-%{version}.so
 
 %files -n %{develname}
-%defattr(-,root,root)
-%{_libdir}/*la
+%if %{mdvver} < 201200
+%{_libdir}/*.la
+%endif
 %{_libdir}/*.so
 %exclude %{_libdir}/libCEGUI*-%{version}.so
 %{_includedir}/CEGUI
 %{_libdir}/pkgconfig/*
 %{_datadir}/CEGUI
+
