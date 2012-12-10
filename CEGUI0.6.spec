@@ -114,3 +114,20 @@ autoreconf -ifv
 %{_libdir}/pkgconfig/*
 %{_datadir}/CEGUI
 
+
+
+%changelog
+* Sun Mar 25 2012 Andrey Bondrov <abondrov@mandriva.org> 0.6.2-7mdv2012.0
++ Revision: 786687
+- Improve gcc 4.6+ support, add patch to fix build with new tinyxml
+
+  + Oden Eriksson <oeriksson@mandriva.com>
+    - rebuild
+
+* Fri Feb 05 2010 Funda Wang <fwang@mandriva.org> 0.6.2-5mdv2010.1
++ Revision: 501068
+- fix obsoletes
+- BR tolua++
+- import CEGUI0.6
+
+
